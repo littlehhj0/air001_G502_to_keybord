@@ -1,0 +1,6 @@
+{
+    "configuration": "UploadSpeed=115200,ClockSourceAndFrequency=HSI4M_HCLK4M,LowSpeedClockSource=None,xserial=generic,dbg=none,opt=osstd,SupplyVoltage=3V3,BootConnection=defaule",
+    "board": "AirM2M:AirMCU:Air001Dev",
+    "sketch": "air001.ino",
+    "port": "COM10"
+}
