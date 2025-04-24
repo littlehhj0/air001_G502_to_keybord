@@ -89,12 +89,14 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="handle.cpp" />
     <ClCompile Include="User.h">
       <FileType>CppCode</FileType>
       <DeploymentContent>true</DeploymentContent>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="handle.h" />
     <ClInclude Include="__vm\.air001.vsarduino.h" />
   </ItemGroup>
   <PropertyGroup>

@@ -25,9 +25,15 @@
     <ClCompile Include="User.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="handle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.air001.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="handle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
