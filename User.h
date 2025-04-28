@@ -1,7 +1,7 @@
 #ifndef _User_H_
 #define _User_H_
 
-#define DEBUG
+ #define DEBUG
 
 #include <Arduino.h>
 #include "EC11.h"
