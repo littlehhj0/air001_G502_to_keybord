@@ -21,8 +21,8 @@ void setup() {
 
 	ec11.begin(PB_1, PA_6, PB_3, ui_key_callb);
 	ec11.speed_up(true);
-	ec11.speed_up_max(20);
-
+	ec11.speed_up_max(10);
+	ec11.speed_up_feel(75);
 	HardwareTimer* MyTim1 = new HardwareTimer(TIM16);
 	MyTim1->setMode(2, TIMER_DISABLED);
 	MyTim1->setOverflow(5000, MICROSEC_FORMAT);   //1ms
@@ -36,7 +36,7 @@ void setup() {
 
 int count = 0;
 void loop() {
-	Serial.println("count");
+	//Serial.println("count");
 	delay(1000);
   count++;
 }

@@ -6,29 +6,47 @@ int key_value = 0;
 
 
 Handle handle;
-bool task_flag = false;  //任务标志位 0-鼠标 1-RGB
-
+bool task_flag = true;  //任务标志位 0-鼠标 1-RGB
+extern Skey ec11;
 extern AIR001_WS2812 strip;
 
 void Handle::key_handle(ec11_task_result_type ec_type, int16_t ec_value)
 {
 	if (ec_type == ec11_task_is_key)
 	{
-		Serial.println("key");
+		//Serial.println("key");
+		switch (ec_value)
+		{
+			case sw_double:
+			{
+				if (RGB_state != RGB_off)
+				{
+					RGB_last_state = RGB_state;
+					RGB_state = RGB_off;
+					strip.setAllLedsColor(0, 0, 0); //关闭灯带
+				}
+				else
+				{
+					RGB_state = RGB_last_state;
+				}
+				break;
+			}
 
-		if (ec_value == sw_long)
+		case sw_long:
 		{
 			task_flag = !task_flag;
 			if (!RGB_blink)
 			{
+				ec11.speed_up(false);
 				RGB_last_state = RGB_state;
 				RGB_blink = true;
 			}
 		}
-		return;
+		default:
+			break;
+		}
 	}
 	else {
-		//Serial.println("encode");
 	}
 
 }
@@ -38,10 +56,7 @@ void Handle::RGB_handle(ec11_task_result_type ec_type, int16_t ec_value)
 	if (ec_type == ec11_task_is_key)
 	{
 		//Serial.println("key");
-		if (ec_value == sw_long)
-		{
 
-		}
 		switch (ec_value)
 		{
 		case sw_long:
@@ -49,6 +64,7 @@ void Handle::RGB_handle(ec11_task_result_type ec_type, int16_t ec_value)
 			task_flag = !task_flag;
 			if (!RGB_blink)
 			{
+				ec11.speed_up(true);
 				RGB_last_state = RGB_state;
 				RGB_blink = true;
 			}
@@ -58,6 +74,21 @@ void Handle::RGB_handle(ec11_task_result_type ec_type, int16_t ec_value)
 		case sw_click:
 		{
 			RGB_state_change();
+			break;
+		}
+		case sw_double:
+		{
+			if (RGB_state != RGB_off)
+			{
+				RGB_last_state = RGB_state;
+				RGB_state = RGB_off;
+				strip.setAllLedsColor(0, 0, 0); //关闭灯带
+			}
+			else
+			{
+				RGB_state = RGB_last_state;
+			}
+			break;
 		}
 		default:
 			break;
@@ -86,54 +117,85 @@ void ui_key_callb(ec11_task_result_type ec_type, int16_t ec_value)  //按键事�
 	{
 		handle.RGB_handle(ec_type, ec_value);
 	}
-
 	key_value = ec_value;
 	ectype = ec_type;
 }
 void Handle::key_loop(int count)
 {
-	if (count % 25 == 0)
+	if (count % 2 == 0)
 	{
 		if (ectype == ec11_task_is_encode)
 		{
+			//Serial.println(key_value);
 			if (key_value > 0)
-				digitalWrite(key_pin1, LOW);
+			{
+				if (key_value == 1)
+				{
+					digitalWrite(key_pin1, LOW);
+					key_value--;
+				}
+				else
+				{
+					if (count % 4 == 0)
+						digitalWrite(key_pin1, HIGH);
+					else
+					{
+						digitalWrite(key_pin1, LOW);
+						key_value--;
+					}
+				}
+			}
 			else if (key_value < 0)
-				digitalWrite(key_pin2, LOW);
-			//else
-			//{
-			//	digitalWrite(key_pin1, HIGH);
-			//	digitalWrite(key_pin2, HIGH);
-			//}
-
+			{
+				if (key_value == 1)
+				{
+					digitalWrite(key_pin2, LOW);
+					key_value++;
+				}
+				else
+				{
+					if (count % 4 == 0)
+						digitalWrite(key_pin2, HIGH);
+					else
+					{
+						digitalWrite(key_pin2, LOW);
+						key_value++;
+					}
+				}
+			}	
+			else {
+				ectype = ec11_task_is_none;
+			}
 		}
 		else if (ectype == ec11_task_is_key)
 		{
-			digitalWrite(key_pin3, LOW);
+			if (key_value == 1)
+				digitalWrite(key_pin3, LOW);
+			//Serial.println(key_value);
+			key_value = 0;
+			ectype = ec11_task_is_none;
 		}
 		else
 		{
 			digitalWrite(key_pin1, HIGH);
 			digitalWrite(key_pin2, HIGH);
 			digitalWrite(key_pin3, HIGH);
-
 		}
-		key_value = 0;
-		ectype = ec11_task_is_none;
+		//
 	}
 }
 
 void Handle::RGB_loop(int count)
 {
-	if (RGB_state == RGB_off)
-	{
 
-		return;
-	}
 	if (RGB_blink)
 	{
 		if (count % 40 == 0)
 			RGB_blink1();
+		return;
+	}
+	if (RGB_state == RGB_off)
+	{
 		return;
 	}
 	switch (RGB_state)
@@ -175,7 +237,6 @@ void Update_IT_callback()  //定时器中断处理函数  1ms
 	{
 		handle.key_loop(count);
 	}
-
 	handle.RGB_loop(count);
 
 	if (handle.get_rgb_state() != RGB_off)
@@ -233,9 +294,9 @@ void Handle::RGB_blink1()
 	//使RGB灯闪烁
 	static int blink_count = 0;
 	if (blink_count % 2 == 0)
-		strip.setAllLedsColor(0, 0, 0);
-	else
 		strip.setAllLedsColor(255, 255, 255);
+	else
+		strip.setAllLedsColor(0, 0, 0);
 	blink_count++;
 	if (blink_count == 4)
 	{
@@ -262,11 +323,7 @@ void Handle::RGB_state_change()
 	}
 	else if (RGB_state == RGB_loop_3)
 	{
-		RGB_state = RGB_off;
-		strip.setAllLedsColor(0, 0, 0); //关闭灯带
-	}
-	else
-	{
 		RGB_state = RGB_loop_1;
+
 	}
 }
