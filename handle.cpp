@@ -294,9 +294,9 @@ void Handle::RGB_blink1()
 	//使RGB灯闪烁
 	static int blink_count = 0;
 	if (blink_count % 2 == 0)
-		strip.setAllLedsColor(255, 255, 255);
+		strip.setLedColor(3,255, 255, 255);
 	else
-		strip.setAllLedsColor(0, 0, 0);
+		strip.setLedColor(3,0, 0, 0);
 	blink_count++;
 	if (blink_count == 4)
 	{
