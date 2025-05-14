@@ -18,7 +18,7 @@ void setup() {
 	digitalWrite(key_pin1, HIGH);
 	digitalWrite(key_pin2, HIGH);
 	digitalWrite(key_pin3, HIGH);
-
+	eeprom.read_all_data();
 	ec11.begin(PB_1, PA_6, PB_3, ui_key_callb);
 	ec11.speed_up(true);
 	ec11.speed_up_max(10);
@@ -34,9 +34,10 @@ void setup() {
 	strip.setBrightness(handle.light);
 }
 
-int count = 0;
 void loop() {
 	//Serial.println("count");
-	delay(1000);
-  count++;
+	delay(10);
+	eeprom.write_task();
+
+
 }

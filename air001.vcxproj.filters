@@ -28,12 +28,18 @@
     <ClCompile Include="handle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="flash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.air001.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="handle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="flash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

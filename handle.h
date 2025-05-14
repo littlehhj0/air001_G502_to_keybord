@@ -22,7 +22,6 @@ typedef enum
 }RGB_State;
 
 
-
 class Handle
 {
 public:
@@ -35,14 +34,16 @@ public:
 	//RGB闪烁
 	void RGB_blink1();
 	bool RGB_blink = false; //RGB闪烁状态
+	RGB_State RGB_state = RGB_loop_3; //RGB状态
+	RGB_State RGB_last_state = RGB_loop_1; //RGB上次状态
+	bool task_flag = true; // 任务标志位 0-鼠标 1-RGB
 private:
 	void RGB_loop1();    //第一种循环效果
 	//int loop1_time = 2;
 	//int loop2_time = 200;
 	void RGB_loop2();   //第二种循环效果
 	void RGB_loop3();   //第三种循环效果
-	RGB_State RGB_state = RGB_loop_3; //RGB状态
-	RGB_State RGB_last_state = RGB_loop_1; //RGB上次状态
+
 	void RGB_state_change(); //RGB状态改变
 };
 
