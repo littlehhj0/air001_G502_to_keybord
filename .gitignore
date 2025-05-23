@@ -366,5 +366,5 @@ air001.sln
 air001.vcxproj
 air001.vcxproj.filters
 .gitattributes
-.vscode\
-__vm\
+.vscode
+__vm
